@@ -27,14 +27,19 @@ public class XygeniSaltAtInitCommandBuilder extends XygeniSaltAtCommandBuilder {
     @Override
     protected void addCommandArgs(ArgumentListBuilder args, Run<?, ?> build) {
 
-        args.add("--basedir", build.getRootDir().getPath());
         for (String attestor : attestors) {
-            args.add("--attestor", attestor);
+            args.add("--attestor=" + attestor);
         }
-        args.add("--exclude", exclude);
+        if (exclude != null && !exclude.isEmpty()) {
+            args.add("--exclude=" + exclude);
+        }
 
-        for (Material material : materials) {
-            args.add("--materials", material.getMaterial());
+        if (materials != null) {
+            for (Material material : materials) {
+                if (!material.getMaterial().isEmpty()) {
+                    args.add("--materials=" + material.getMaterial());
+                }
+            }
         }
     }
 }

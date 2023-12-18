@@ -3,7 +3,6 @@ package io.jenkins.plugins.xygeni.saltcommand;
 import hudson.model.Run;
 import hudson.util.ArgumentListBuilder;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.Item;
-
 import java.util.List;
 
 public class XygeniSaltAtRunCommandBuilder extends XygeniSaltAtCommandBuilder {
@@ -60,22 +59,24 @@ public class XygeniSaltAtRunCommandBuilder extends XygeniSaltAtCommandBuilder {
     @Override
     protected void addCommandArgs(ArgumentListBuilder args, Run<?, ?> build) {
 
-        args.add("--max-out", getMaxoutString());
-        args.add("--step", getStep());
-        args.add("--max-err", getMaxerrString());
-        args.add("--timeout", getTimeoutString());
+        args.add("--max-out=" + getMaxoutString());
+        args.add("--step=" + getStep());
+        args.add("--max-err=" + getMaxerrString());
+        args.add("--timeout=" + getTimeoutString());
 
         for (Item item : items) {
-            args.add("-n", item.getName());
-            args.add("-t", item.getType());
+            args.add("--name=" + item.getName());
+            if (item.getType() != null) {
+                args.add("--type=" + item.getType());
+            }
             if (item.isValue()) {
-                args.add("-v", item.getValue());
+                args.add("--value=" + item.getValue());
             } else if (item.isFile()) {
-                args.add("-f", item.getFile());
+                args.add("--file=" + item.getFile());
             } else if (item.isDigest()) {
                 args.add("--digest=" + item.getDigest());
             } else {
-                args.add("-i", item.getImage());
+                args.add("--image=" + item.getImage());
             }
         }
         args.add("--", getCommandLine());

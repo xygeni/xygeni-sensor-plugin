@@ -100,12 +100,19 @@ public class SaltAtRunStepBuilder extends Builder implements SimpleBuildStep {
     }
 
     @DataBoundSetter
-    public void setOutputOptions(OutputOptions outputOptions){
+    public void setOutputOptions(OutputOptions outputOptions) {
         this.outputOptions = outputOptions;
     }
 
+    public OutputOptions getOutputOptions() {
+        return this.outputOptions;
+    }
+
     @DataBoundConstructor
-    public SaltAtRunStepBuilder() {}
+    public SaltAtRunStepBuilder(OutputOptions outputOptions) {
+        this.outputOptions = outputOptions;
+        if (outputOptions == null) this.outputOptions = new OutputOptions(null, false, null);
+    }
 
     @Override
     public void perform(
@@ -120,7 +127,7 @@ public class SaltAtRunStepBuilder extends Builder implements SimpleBuildStep {
 
         new XygeniSaltAtRunCommandBuilder(getMaxout(), getStep(), getMaxerr(), getTimeout(), getItems(), getCommand())
                 .withRun(run, launcher, listener)
-                .withOutputOptions(outputOptions.getOutput(), outputOptions.getPrettyPrint(), null)
+                .withOutputOptions(outputOptions)
                 .build()
                 .run();
     }

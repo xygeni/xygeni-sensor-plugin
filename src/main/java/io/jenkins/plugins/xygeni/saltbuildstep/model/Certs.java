@@ -1,6 +1,8 @@
 package io.jenkins.plugins.xygeni.saltbuildstep.model;
 
+import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -76,5 +78,12 @@ public class Certs extends AbstractDescribableImpl<Certs> {
         this.pkiFormat = pkiFormat;
         this.certificate = certificate;
         this.keyless = keyless;
+    }
+
+    @Extension
+    public static class DescriptorImpl extends Descriptor<Certs> {
+        public String getDisplayName() {
+            return "Signer Configuration";
+        }
     }
 }

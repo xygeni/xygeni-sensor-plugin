@@ -11,22 +11,15 @@ import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import io.jenkins.plugins.xygeni.saltbuildstep.model.AttestationOptions;
-import io.jenkins.plugins.xygeni.saltbuildstep.model.Certs;
-import io.jenkins.plugins.xygeni.saltbuildstep.model.OutputOptions;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.Subject;
-import io.jenkins.plugins.xygeni.saltcommand.XygeniSaltAtCommitCommandBuilder;
 import io.jenkins.plugins.xygeni.saltcommand.XygeniSaltVerifyCommandBuilder;
-import jenkins.tasks.SimpleBuildStep;
-import net.sf.json.JSONObject;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.StaplerRequest;
-
 import java.io.PrintStream;
 import java.util.List;
 import java.util.logging.Logger;
+import jenkins.tasks.SimpleBuildStep;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 /**
  * Salt Verify Command Recorder Class.
@@ -52,47 +45,47 @@ public class SaltVerifyRecorder extends Recorder implements SimpleBuildStep {
     }
 
     @DataBoundSetter
-    public void setPublicKey(String publicKey){
+    public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
 
     @DataBoundSetter
-    public void setCertificate(String certificate){
+    public void setCertificate(String certificate) {
         this.certificate = certificate;
     }
 
     @DataBoundSetter
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
     }
 
     @DataBoundSetter
-    public void setAttestation(String attestation){
+    public void setAttestation(String attestation) {
         this.attestation = attestation;
     }
 
     @DataBoundSetter
-    public void setSubjects(List<Subject> subjects){
+    public void setSubjects(List<Subject> subjects) {
         this.subjects = subjects;
     }
 
-    public String getOutput(){
+    public String getOutput() {
         return this.output;
     }
 
-    public String getPublicKey(){
+    public String getPublicKey() {
         return this.publicKey;
     }
 
-    public String getCertificate(){
+    public String getCertificate() {
         return this.certificate;
     }
 
-    public String getId(){
+    public String getId() {
         return this.id;
     }
 
-    public String getAttestation(){
+    public String getAttestation() {
         return this.attestation;
     }
 
@@ -120,8 +113,7 @@ public class SaltVerifyRecorder extends Recorder implements SimpleBuildStep {
 
         console.println("[xygeniSalt Attestation Verify] running ..");
 
-        new XygeniSaltVerifyCommandBuilder(
-                        output, publicKey, certificate, id, attestation, subjects)
+        new XygeniSaltVerifyCommandBuilder(output, publicKey, certificate, id, attestation, subjects)
                 .withRun(run, launcher, listener)
                 .build()
                 .run();

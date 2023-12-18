@@ -9,22 +9,22 @@ import hudson.model.TaskListener;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.AttestationOptions;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.Certs;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.OutputOptions;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mockito;
 
 public class SaltAtCommitTest {
 
     @Test
     void runSaltCommitWithKeyless(@TempDir File tempDir) throws IOException, InterruptedException {
 
-        String expected = "salt at --never-fail commit --pipeline MyPipeline --no-upload --project MyProject -o out.json --pretty-print -keyless";
+        String expected = "salt at --never-fail commit --pipeline=MyPipeline --basedir=" + tempDir.getPath()
+                + " --no-upload --project=MyProject -o out.json --pretty-print --keyless";
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(baos);
@@ -38,7 +38,8 @@ public class SaltAtCommitTest {
     @Test
     void runSaltCommitWithKey(@TempDir File tempDir) throws IOException, InterruptedException {
 
-        String expected = "salt at --never-fail commit --pipeline MyPipeline --no-upload --project MyProject -o out.json --pretty-print -k env:KEY --key-password=env:PASS --public-key=env:PUBKEY --pki-format=x509";
+        String expected = "salt at --never-fail commit --pipeline=MyPipeline --basedir=" + tempDir.getPath()
+                + " --no-upload --project=MyProject -o out.json --pretty-print -k env:KEY --key-password=env:PASS --public-key=env:PUBKEY --pki-format=x509";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(baos);
 
@@ -48,12 +49,14 @@ public class SaltAtCommitTest {
         assertLogContains(expected, baos);
     }
 
-    private void assertLogContains(String expected, ByteArrayOutputStream baos){
+    private void assertLogContains(String expected, ByteArrayOutputStream baos) {
         String output = baos.toString();
-        Assertions.assertTrue(output.contains(expected),"Expected: \n" + expected + "\nnot found in: \n" + baos.toString());
+        Assertions.assertTrue(
+                output.contains(expected), "Expected: \n" + expected + "\nnot found in: \n" + baos.toString());
     }
 
-    private void runCommit(Certs certs, File tempDir, PrintStream printStream) throws IOException, InterruptedException {
+    private void runCommit(Certs certs, File tempDir, PrintStream printStream)
+            throws IOException, InterruptedException {
 
         Run mockRun = Mockito.mock(Run.class);
         Mockito.when(mockRun.getResult()).thenReturn(Result.SUCCESS);
@@ -69,10 +72,8 @@ public class SaltAtCommitTest {
         FilePath mockWorkspace = Mockito.mock(FilePath.class);
         Mockito.when(mockWorkspace.list(Mockito.anyString())).thenReturn(new FilePath[] {new FilePath(tempDir)});
 
-        SaltAtCommitRecorder p = new SaltAtCommitRecorder();
-        p.setAttestationOptions(new AttestationOptions(true, "MyProject", false));
-        p.setCerts(certs);
-        p.setOutputOptions(new OutputOptions("out.json", true, null));
+        SaltAtCommitRecorder p = new SaltAtCommitRecorder(
+                certs, new AttestationOptions(true, "MyProject", false), new OutputOptions("out.json", true, null));
         p.perform(mockRun, mockWorkspace, mockEVars, new Launcher.DummyLauncher(mockTList), mockTList);
     }
 }

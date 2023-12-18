@@ -45,17 +45,41 @@ public class SaltAtCommitRecorder extends Recorder implements SimpleBuildStep {
     }
 
     @DataBoundSetter
-    public void setCerts(Certs certs){
+    public void setCerts(Certs certs) {
         this.certs = certs;
     }
 
     @DataBoundSetter
-    public void setOutputOptions(OutputOptions outputOptions){
+    public void setOutputOptions(OutputOptions outputOptions) {
         this.outputOptions = outputOptions;
     }
 
+    public AttestationOptions getAttestationOptions() {
+        return this.attestationOptions;
+    }
+
+    public Certs getCerts() {
+        return this.certs;
+    }
+
+    public OutputOptions getOutputOptions() {
+        return this.outputOptions;
+    }
+
+    /**
+     * Instance a Salt Attestation Commit command.
+     * Required args will not be checked here, it should be reported by salt command.
+     * If not options are informed, a default configuration is provided.
+     * @param certs
+     * @param attestationOptions
+     * @param outputOptions
+     */
     @DataBoundConstructor
-    public SaltAtCommitRecorder() {}
+    public SaltAtCommitRecorder(Certs certs, AttestationOptions attestationOptions, OutputOptions outputOptions) {
+        this.certs = certs;
+        this.attestationOptions = attestationOptions;
+        this.outputOptions = outputOptions;
+    }
 
     @Override
     public void perform(
@@ -68,6 +92,10 @@ public class SaltAtCommitRecorder extends Recorder implements SimpleBuildStep {
 
         console.println("[xygeniSalt Attestation Commit] running ..");
 
+        // default configuration
+        if (this.attestationOptions == null) attestationOptions = new AttestationOptions(false, null, false);
+        if (this.outputOptions == null) outputOptions = new OutputOptions(null, false, null);
+
         new XygeniSaltAtCommitCommandBuilder(
                         certs.getKey(),
                         certs.getKeyPassword(),
@@ -76,12 +104,8 @@ public class SaltAtCommitRecorder extends Recorder implements SimpleBuildStep {
                         certs.getCertificate(),
                         certs.getKeyless())
                 .withRun(run, launcher, listener)
-                .withAttestationOptions(
-                        attestationOptions.getNoUpload(),
-                        attestationOptions.getProject(),
-                        attestationOptions.getNoResultUpload())
-                .withOutputOptions(
-                        outputOptions.getOutput(), outputOptions.getPrettyPrint(), outputOptions.getOutputUnsigned())
+                .withAttestationOptions(attestationOptions)
+                .withOutputOptions(outputOptions)
                 .build()
                 .run();
     }

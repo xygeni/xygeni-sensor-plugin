@@ -1,7 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
 
-    <f:section title="Signer configuration">
+    <f:section title="Signer configuration" name="certs">
         <f:entry title="keyless" field="keyless" help="/plugin/xygeni-sensor/saltbuildstep/help-keyless.html">
             <f:checkbox />
         </f:entry>

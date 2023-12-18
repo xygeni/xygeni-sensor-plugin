@@ -56,7 +56,6 @@ public class SaltProvenanceRecorder extends Recorder implements SimpleBuildStep 
     private AttestationOptions attestationOptions;
     private OutputOptions outputOptions;
 
-
     // getters/setters
 
     public String getArtifactFilter() {
@@ -87,9 +86,22 @@ public class SaltProvenanceRecorder extends Recorder implements SimpleBuildStep 
     }
 
     @DataBoundSetter
-    public void setCerts(Certs certs){
+    public void setCerts(Certs certs) {
         this.certs = certs;
     }
+
+    public AttestationOptions getAttestationOptions() {
+        return this.attestationOptions;
+    }
+
+    public Certs getCerts() {
+        return this.certs;
+    }
+
+    public OutputOptions getOutputOptions() {
+        return this.outputOptions;
+    }
+
     // STATE
 
     public boolean isArtifactFilterOn() {
@@ -142,11 +154,8 @@ public class SaltProvenanceRecorder extends Recorder implements SimpleBuildStep 
                         certs.getCertificate(),
                         subjects)
                 .withRun(run, launcher, listener)
-                .withAttestationOptions(
-                        attestationOptions.getNoUpload(),
-                        attestationOptions.getProject(),
-                        attestationOptions.getNoResultUpload())
-                .withOutputOptions(outputOptions.getOutput(), outputOptions.getPrettyPrint(), null)
+                .withAttestationOptions(attestationOptions)
+                .withOutputOptions(outputOptions)
                 .build()
                 .run();
     }

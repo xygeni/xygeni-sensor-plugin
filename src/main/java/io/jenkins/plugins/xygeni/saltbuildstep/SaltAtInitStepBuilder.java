@@ -39,8 +39,6 @@ public class SaltAtInitStepBuilder extends Builder implements SimpleBuildStep {
 
     private List<Material> materials;
 
-
-
     @DataBoundSetter
     public void setGitAttestor(boolean gitAttestor) {
         this.gitAttestor = gitAttestor;
@@ -61,7 +59,7 @@ public class SaltAtInitStepBuilder extends Builder implements SimpleBuildStep {
 
     @DataBoundSetter
     public void setExclude(String exclude) {
-        if("".equals(exclude)) this.exclude = null;
+        if ("".equals(exclude)) this.exclude = null;
         else this.exclude = exclude;
     }
 

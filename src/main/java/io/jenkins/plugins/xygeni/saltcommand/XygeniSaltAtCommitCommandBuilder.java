@@ -34,7 +34,7 @@ public class XygeniSaltAtCommitCommandBuilder extends XygeniSaltAtCommandBuilder
     protected void addCommandArgs(ArgumentListBuilder args, Run<?, ?> build) {
 
         if (keyless) {
-            args.add("-keyless");
+            args.add("--keyless");
         } else {
             args.add("-k", key);
             args.add("--key-password=" + keyPassword);

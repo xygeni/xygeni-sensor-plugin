@@ -1,6 +1,8 @@
 package io.jenkins.plugins.xygeni.saltbuildstep.model;
 
+import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -44,5 +46,12 @@ public class OutputOptions extends AbstractDescribableImpl<OutputOptions> {
         this.output = output;
         this.prettyPrint = prettyPrint;
         this.outputUnsigned = outputUnsigned;
+    }
+
+    @Extension
+    public static class DescriptorImpl extends Descriptor<OutputOptions> {
+        public String getDisplayName() {
+            return "Output Options";
+        }
     }
 }

@@ -1,6 +1,8 @@
 package io.jenkins.plugins.xygeni.saltbuildstep.model;
 
+import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -42,5 +44,12 @@ public class AttestationOptions extends AbstractDescribableImpl<AttestationOptio
         this.noUpload = noUpload;
         this.project = project;
         this.noResultUpload = noResultUpload;
+    }
+
+    @Extension
+    public static class DescriptorImpl extends Descriptor<AttestationOptions> {
+        public String getDisplayName() {
+            return "Attestation Options";
+        }
     }
 }

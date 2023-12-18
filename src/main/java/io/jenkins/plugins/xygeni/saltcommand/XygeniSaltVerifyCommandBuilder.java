@@ -3,7 +3,6 @@ package io.jenkins.plugins.xygeni.saltcommand;
 import hudson.model.Run;
 import hudson.util.ArgumentListBuilder;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.Subject;
-
 import java.util.List;
 
 public class XygeniSaltVerifyCommandBuilder extends XygeniSaltAtCommandBuilder {
@@ -18,8 +17,13 @@ public class XygeniSaltVerifyCommandBuilder extends XygeniSaltAtCommandBuilder {
 
     private List<Subject> subjects;
 
-
-    public XygeniSaltVerifyCommandBuilder(String output, String publicKey, String certificate, String id, String attestation, List<Subject> subjects) {
+    public XygeniSaltVerifyCommandBuilder(
+            String output,
+            String publicKey,
+            String certificate,
+            String id,
+            String attestation,
+            List<Subject> subjects) {
         this.output = output;
         this.publicKey = publicKey;
         this.certificate = certificate;
@@ -36,25 +40,25 @@ public class XygeniSaltVerifyCommandBuilder extends XygeniSaltAtCommandBuilder {
     @Override
     protected void addCommandArgs(ArgumentListBuilder args, Run<?, ?> build) {
 
-        if(output != null && !output.isBlank()) {
+        if (output != null && !output.isBlank()) {
             args.add("-o", output);
         }
-        if(publicKey != null && !publicKey.isBlank()) {
+        if (publicKey != null && !publicKey.isBlank()) {
             args.add("-k", publicKey);
         }
-        if(certificate != null && !certificate.isBlank()) {
-            args.add("--certificate", certificate);
+        if (certificate != null && !certificate.isBlank()) {
+            args.add("--certificate=" + certificate);
         }
-        if(id != null && !id.isBlank()) {
-            args.add("--id", id);
+        if (id != null && !id.isBlank()) {
+            args.add("--id=" + id);
         }
-        if(attestation != null && !attestation.isBlank()) {
-            args.add("--attestation", attestation);
+        if (attestation != null && !attestation.isBlank()) {
+            args.add("--attestation=" + attestation);
         }
 
         for (Subject subject : subjects) {
             if (subject.getName() != null) {
-                args.add("-n" , subject.getName());
+                args.add("-n", subject.getName());
             }
             if (subject.isValue()) {
                 args.add("-v", subject.getValue());

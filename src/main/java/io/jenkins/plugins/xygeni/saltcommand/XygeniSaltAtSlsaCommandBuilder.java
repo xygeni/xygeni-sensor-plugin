@@ -3,7 +3,6 @@ package io.jenkins.plugins.xygeni.saltcommand;
 import hudson.model.Run;
 import hudson.util.ArgumentListBuilder;
 import io.jenkins.plugins.xygeni.saltbuildstep.model.Subject;
-
 import java.util.List;
 
 public class XygeniSaltAtSlsaCommandBuilder extends XygeniSaltAtCommandBuilder {

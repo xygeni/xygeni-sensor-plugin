@@ -30,7 +30,7 @@ public class XygeniSaltAtCommand {
             String outFileName = "salt-command.out";
             File outFile = new File(build.getRootDir(), outFileName);
             print_stream = new PrintStream(outFile, StandardCharsets.UTF_8);
-            ps.stdout(print_stream);
+            ps.stdout(listener.getLogger());
             ps.quiet(true);
 
             listener.getLogger().println("Salt command in progress...");
