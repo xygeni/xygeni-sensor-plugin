@@ -4,7 +4,6 @@ import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
-
 import java.io.IOException;
 import java.io.PrintStream;
 
