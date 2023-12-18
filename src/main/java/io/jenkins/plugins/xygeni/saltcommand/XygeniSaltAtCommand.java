@@ -4,10 +4,9 @@ import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 
 public class XygeniSaltAtCommand {
 
@@ -26,14 +25,9 @@ public class XygeniSaltAtCommand {
             ps.cmds(getCommandArgs());
             ps.stdin(null);
             ps.stderr(listener.getLogger());
-
-            String outFileName = "salt-command.out";
-            File outFile = new File(build.getRootDir(), outFileName);
-            print_stream = new PrintStream(outFile, StandardCharsets.UTF_8);
             ps.stdout(listener.getLogger());
             ps.quiet(true);
 
-            listener.getLogger().println("Salt command in progress...");
             listener.getLogger().println("" + args.toString());
             ps.join(); // RUN !
 
