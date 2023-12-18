@@ -1,0 +1,16 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <!--
+      per-project configuration.
+    -->
+    <f:block>
+        <div>This Step will download Salt command from Xygeni site, unzip it and add an alias to allow run Salt commands
+            in the current node. </div>
+    </f:block>
+
+    <f:entry title="Runner's Operating System" field="operatingSystem">
+        <f:radio name="option" value="linux" title="Linux (curl)" />
+        <f:radio name="option" value="windows" title="Windows (PShell)" />
+    </f:entry>
+
+</j:jelly>
