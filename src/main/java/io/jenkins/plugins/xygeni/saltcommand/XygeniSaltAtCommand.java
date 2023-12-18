@@ -5,7 +5,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
 import java.io.IOException;
-import java.io.PrintStream;
 
 public class XygeniSaltAtCommand {
 
@@ -17,7 +16,6 @@ public class XygeniSaltAtCommand {
 
     public void run() {
 
-        PrintStream print_stream = null;
         try {
 
             Launcher.ProcStarter ps = launcher.launch();
@@ -32,10 +30,6 @@ public class XygeniSaltAtCommand {
 
         } catch (IOException | InterruptedException e) {
             listener.getLogger().println("Error running Xygeni Salt:" + e.getMessage());
-        } finally {
-            if (print_stream != null) {
-                print_stream.close();
-            }
         }
     }
 
