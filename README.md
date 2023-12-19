@@ -50,6 +50,7 @@ Table of contents
   * [Set up credentials](#1-set-up-credentials)
   * [Configure plugin settings](#2-configure-xygeni-sensor-plugin-settings-)
 * Xygeni pipeline-compatible Steps
+  * [Xygeni-Salt Custom Attestation](#xygeni-salt-custom-attestation)
   * [Xygeni Salt SLSA Attestation Provenance Step](#xygeni-salt-slsa-step)
 
 
