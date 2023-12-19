@@ -107,7 +107,12 @@ This step command will generate an slsa attestation provenance ``xygeni-salt-att
 
 **Pipeline Syntax tool** could helps to define ``xygeniSalt`` steps with their arguments. 
 
- * The ``xygeniSaltSlsa`` step could be invoked for generating SALT provenance. Build information for the registered attestation **subjects** (also known as software 'products' or 'artifacts') will be registered in the signed attestation.
+ * The ``xygeniSaltAt(Init|Add|Run|Commit)``  steps could be invoked for generating custom SALT attestations. 
+ * The ``xygeniSaltSlsa`` post step could be invoked for generating SALT provenance. Build information for the registered attestation **subjects** (also known as software 'products' or 'artifacts') will be registered in the signed attestation.
+ * The ``xygeniSaltVerify`` post step could run Salt verify command to perform post-build and attestation validations.
+
+Pipeline syntax example:
+![Pipeline Syntax](docs/images/pipeline-syntax.png)
 
 ### Step parameters
 
@@ -134,10 +139,14 @@ You can use ``xygeniSalt keygen`` command option to generate and save signing ke
 
 #### Keyless signatures
 
-To use keyless signing, the `--keyless` option could be passed to the attestation commit | provenance commands. This will fetch an OpenID Connect (OIDC) from specific issuers, using an OAuth flow (standard or device).
 
-Check the Xygeni docs for complete info: https://docs.xygeni.io/xydocs/build_security/salt_how_to.html#_use_keyless_signatures (subscription required)
+To use keyless signing, the --keyless option could be passed to the salt commit | provenance commands. An ephemeral keypair is generated, and an ephemeral X.509 certificate will be issued by the [SigStore Fulcio CA](https://docs.sigstore.dev/certificate_authority/overview/).
 
+To authenticate the Jenkins build, Fulcio needs an OpenID Connect (OIDC) id token, as explained in [OIDC Usage in Fulcio](https://docs.sigstore.dev/certificate_authority/oidc-in-fulcio/). Such OIDC token could be generated using the Jenkins [OpenID Connect Provider plugin](https://plugins.jenkins.io/oidc-provider/). The claims to be included in the token for proper authentication with Fulcio CA are `iss`, the issuer (which should be set to `https://oauth2.sigstore.dev/auth`) and aud, the audience (which should be set to `sigstore`). The `sub`, subject is set by the plugin as the default URL of the Jenkins job, which is adequate as the "identity" of the signer in this context. See [Registering the identity provider](https://plugins.jenkins.io/oidc-provider/#plugin-content-registering-the-identity-provider) for further information.
+
+Jobs running in Jenkins runners use the plugin's OIDC provider that authenticates the job and generates a short-lived OIDC ID token. The OIDC plugin will store the token either in an environment variable or in a CI/CD file, so the `xygeniSalt commit` or `xygeniSaltSlsa` commands will fetch it to use for authentication with Fulcio CA.The variable and the path are configured in the `conf/salt.yaml` file, and the default values are `SIGSTORE_ID_TOKEN` or `/var/run/sigstore/cosign/oidc-token` path, respectively.
+
+The ephemeral certificate has a life of 10 minutes, and the event is registered in a transparency log. Verifiers of the attestation can check that the certificate was valid at the moment where the attestation was signed, and validate the certificate chain. The identity (the Jenkins build URI) will be registered as an URI field in the X509 certificate's SAN (Subject Alternative Name), so the verifier knows which jenkins job created the attestation. For full details, read [Certificate Issuing Overview](https://docs.sigstore.dev/certificate_authority/certificate-issuing-overview/).
 
 #### Adding XygeniSalt-SLSA attestation provenance step to a Pipeline
 
@@ -173,7 +182,9 @@ pipeline {
     stages {
         stage("Init") {
             steps {
-               xygeniSaltAtInit()
+               xygeniSaltAtInit(
+                 materials: [[material: 'src/']]
+               )
             }
         }
         stage('Add') {
