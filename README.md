@@ -223,13 +223,14 @@ pipeline {
 
 ### Job configuration - Freestyle project
 
-The plugin provides a ```Post-build action``` which will generate SLSA provenace attestations.
+The plugin provides following actions:
+ * `Build actions`
+   * **XygeniSaltAtInit** to Initialize a draft attestation 
+   * **XygeniSaltAtAdd** to add an attestation predicate
+   * **XygeniSaltAtRun** to capture a build step
+ * ```Post-build actions``` 
+   * **XygeniSaltAtCommit** to sign and publish a draft attestation.
+   * **XygeniSaltSlsa** which will generate SLSA provenace attestations.
 
-**Artifact Path Filter**: Specifies the artifacts to include.
 
-![xygenisaltslsa-artifactfilter.png](docs/images/xygenisaltslsa-artifactfilter.png)
-
-**Manually defined Subject Attestation**: Specifies one or more name and content to include (a string, file or image).
-
-![xygenisalt-manual.png](docs/images/xygenisalt-manual.png)
 
